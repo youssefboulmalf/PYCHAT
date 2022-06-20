@@ -5,28 +5,36 @@ from tkinter import dialog
 import tkinter.scrolledtext
 from tkinter import simpledialog
 from pyrsa.pyrsa import create_key, decrypt_message, encrypt_message
+import re
 
 
 HOST = "127.0.0.1"
 PORT = 9090
 
 class Client:
-    def __init__(self, host, port):
+    def __init__(self):
 
 
         self.keypair = create_key()
         self.public_key = self.keypair[0]
         self.private_key = self.keypair[1]
 
-        self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.sock.connect((host, port))
-
-
         msg = tkinter.Tk()
         msg.withdraw()
 
+        self.host = ""
+        self.port = 0
+        while re.match("^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$", self.host) is None:
+            self.host=simpledialog.askstring("Host", "Please enter the host ip", parent=msg)
 
-        self.username = simpledialog.askstring("Username", "PLease create a username", parent=msg)
+        while self.port < 1 or self.port > 65535:
+            self.port=simpledialog.askinteger("Port", "Please enter the port number", parent=msg)
+
+
+        self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.sock.connect((self.host, self.port))
+
+        self.username = simpledialog.askstring("Username", "Please create a username", parent=msg)
 
         self.gui_done = False
 
@@ -99,14 +107,12 @@ class Client:
                 if message.startswith('SVK2:'):
                     self.sock.send("ACK".encode("utf-8"))
                     self.server_public_key.append(int(message.split(":")[1]))
-                    print(self.server_public_key)
                 
 
                 else:
                     if message == "NCK" or message == "PBK1" or message == "PBK2" or message.startswith('SVK1:') or message.startswith('SVK2:') :
                         pass
                     else:
-                        print(f"else {message}")
                         decrypted_message = decrypt_message(self.private_key, message)
                         if self.gui_done:
                             self.text_area.config(state='normal')
@@ -122,4 +128,4 @@ class Client:
                 exit(0)
 
 
-client = Client(HOST,PORT)
+client = Client()
