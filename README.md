@@ -1,4 +1,4 @@
-![alt text](img/pychatlogo.png?raw=true "PYCHAT")
+![alt text](images/pychatlogo.png?raw=true "PYCHAT")
 
 # PYCHAT #
 ## An RSA encrypted client server messaging app ##
