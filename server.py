@@ -43,16 +43,19 @@ def broadcast(message):
     # Encrypts messages using client public key and send it to all active clients 
     for user_session in users:
         encrypted_message = encrypt_message(user_session.public_key, decrypted_message)
-        user_session.client.send(encrypted_message.encode("utf-8"))
+        try:
+            user_session.client.send(encrypted_message.encode("utf-8"))
+        except:
+            break
 
 
 # Actively checking for an incomming massage and handling close connections
-#TODO Make exception for last session to disconnect from server quit error
 
 def handle(user_session):
     while True:
         try:
             message = user_session.client.recv(1024).decode('utf-8')
+            print(user_session.client)
             broadcast(message)
         except:
             print(f"{user_session.username} disconected")

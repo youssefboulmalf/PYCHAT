@@ -39,7 +39,17 @@ def calculate_e(n,φ):
                 divisors.append(i)
         if not len(divisors)  > 0:
             possibilities.append(value)
-    return possibilities[randint(0,len(possibilities)-1)]
+        
+    try:
+        p = possibilities[randint(0,len(possibilities)-1)]
+        if p is not None:
+            return p
+        else: 
+            create_key() 
+    except:
+        print("wrong")
+        create_key()
+
 
 
 def calculate_d(e,φ):
