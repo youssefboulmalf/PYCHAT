@@ -23,7 +23,7 @@ class Client:
         root.withdraw()
         self.host = ""
         self.port = 0
-        while re.match("^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$", self.host) is None:
+        while re.match("^(?:[0-9]{1,3}\.|ngrok\.|tcp\.){3}([0-9]{1,3}|io)", self.host) is None:
             self.host=simpledialog.askstring("Host", "Please enter the host ip", parent=root)
 
         while self.port < 1 or self.port > 65535:
